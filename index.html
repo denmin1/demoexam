@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Создание заявки</title>
+</head>
+<body>
+ <form action="http://127.0.0.1:8000/orders" method="post">
+   <input required placeholder="number" type="number" name="number" />
+   <input required placeholder="startdate" type="date" name="startdate">
+   <input required placeholder="device" type="text" name="device">
+   <input required placeholder="problemtype" type="text" name="problemtype">
+   <input required placeholder="description" type="text" name="description">
+   <input required placeholder="client" type="text" name="client">
+   <select name="status">
+    <option>В ожидании</option>
+    <option>В работе</option>
+    <option>Выполнено</option>
+   </select>
+      <input type="submit" value="Создать заявку">
+ </form>    
+</body>
+</html>
