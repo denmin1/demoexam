@@ -2,6 +2,7 @@ import datetime
 from typing import Annotated, Optional
 from pydantic import BaseModel
 from fastapi import FastAPI, Form
+from fastapi.middleware.cors import CORSMiddleware
 
 class Order(BaseModel):
  number : int
@@ -21,12 +22,30 @@ class UpdateOrederDTO(BaseModel):
  master : Optional[str] = ""
 
 
-
-
 repo=[
  
 Order(
  number = 1,
+ startdate = "2000-12-01",
+ device = "testdev",
+ problemtype = "testprobl",
+ description = "test",
+ client = "ivan",
+ status = "testovy"
+),
+
+Order(
+ number = 2,
+ startdate = "2000-12-01",
+ device = "testdev",
+ problemtype = "testprobl",
+ description = "test",
+ client = "ivan",
+ status = "testovy"
+),
+
+Order(
+ number = 3,
  startdate = "2000-12-01",
  device = "testdev",
  problemtype = "testprobl",
@@ -38,10 +57,26 @@ Order(
 ]
 
 app = FastAPI()
+
+app.add_middleware(
+  CORSMiddleware,
+  allow_origins = ["*"],
+  allow_methods = ["*"],
+  allow_headers = ["*"]
+  )
+
+
+message = ""
+
  
 @app.get("/orders")
-def get_orders():
- return repo
+def get_orders(param = None):
+ global message
+ buf = message
+ message = ""
+ if (param):
+    return {"repo": [o for o in repo if o.number == int(param)], "message": buf}
+ return {"repo": repo, "message": buf}
 
 @app.post("/orders")
 def create_order(dto : Annotated[Order, Form()]  ):
@@ -51,10 +86,12 @@ def create_order(dto : Annotated[Order, Form()]  ):
 
 @app.post("/update")
 def update_order(dto : Annotated[UpdateOrederDTO, Form()]  ):
+ global message
  for o in repo:
   if o.number == dto.number:
     if dto.status != o.status and dto.status != "":
       o.status = dto.status
+      message += f"Статус заявки {o.number} изменен\n" 
     if dto.description != "":
       o.description = dto.description
     if dto.master != "":
