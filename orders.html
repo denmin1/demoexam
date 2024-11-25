@@ -19,12 +19,17 @@
                 <th>Клиент</th>
                 <th>Статус</th>
                 <th>Мастер</th>
+                <th>Комментарии</th>
             </tr>
         </thead>
         <tbody>
         </tbody>
     </table>
     <script>
+
+        if(!sessionStorage.getItem("token"))
+         window.location.href = "auth.html";
+
         let tbody = document.querySelector("tbody");
 
         GetOrders();
@@ -50,7 +55,8 @@
                     <td>${o.description}</td>
                     <td>${o.client}</td>
                     <td>${o.status}</td>
-                    <td>${o.master}</td>`;
+                    <td>${o.master}</td>
+                    <td>${o.comments}</td>`;
 
                 tbody.append(tr);
             });
